@@ -1,0 +1,445 @@
+# Sanskrit Keyboard - Downloadable Repository
+
+## Project Structure
+
+```
+sanskrit-keyboard/
+├── public/
+│   ├── index.html
+│   └── favicon.ico
+├── src/
+│   ├── App.jsx
+│   ├── index.js
+│   └── index.css
+├── package.json
+├── .gitignore
+└── README.md
+```
+
+---
+
+## FILE: package.json
+
+```json
+{
+  "name": "sanskrit-keyboard",
+  "version": "1.0.0",
+  "description": "Sanskrit Devanagari Keyboard Application",
+  "private": true,
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "lucide-react": "^0.263.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
+```
+
+---
+
+## FILE: public/index.html
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#78350f" />
+    <meta name="description" content="Sanskrit Devanagari Keyboard - Type in Sanskrit easily" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Sanskrit Keyboard - संस्कृत कीबोर्ड</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>
+```
+
+---
+
+## FILE: src/index.js
+
+```javascript
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+```
+
+---
+
+## FILE: src/index.css
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+```
+
+---
+
+## FILE: src/App.jsx
+
+```jsx
+import React, { useState } from 'react';
+import { Copy, Download, Delete, Check } from 'lucide-react';
+
+export default function App() {
+  const [text, setText] = useState('');
+  const [copied, setCopied] = useState(false);
+
+  const consonants = [
+    ['क', 'ख', 'ग', 'घ', 'ङ'],
+    ['च', 'छ', 'ज', 'झ', 'ञ'],
+    ['ट', 'ठ', 'ड', 'ढ', 'ण'],
+    ['त', 'थ', 'द', 'ध', 'न'],
+    ['प', 'फ', 'ब', 'भ', 'म'],
+    ['य', 'र', 'ल', 'व'],
+    ['श', 'ष', 'स', 'ह']
+  ];
+
+  const vowels = ['अ', 'आ', 'इ', 'ई', 'उ', 'ऊ', 'ऋ', 'ॠ', 'ऌ', 'ॡ', 'ए', 'ऐ', 'ओ', 'औ'];
+  const vowelSigns = ['ा', 'ि', 'ी', 'ु', 'ू', 'ृ', 'ॄ', 'ॢ', 'ॣ', 'े', 'ै', 'ो', 'ौ', 'ं', 'ः', '्'];
+  const numbers = ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'];
+  const special = ['।', '॥', 'ॐ', '꣼'];
+
+  const addChar = (char) => setText(prev => prev + char);
+  const handleBackspace = () => setText(prev => prev.slice(0, -1));
+  const handleClear = () => setText('');
+  const handleSpace = () => setText(prev => prev + ' ');
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleDownload = () => {
+    const blob = new Blob([text], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'sanskrit-text.txt';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div className="min-h-screen bg-white p-4 sm:p-6 lg:p-8" style={{fontFamily: 'Inter, sans-serif'}}>
+      <div className="max-w-6xl mx-auto">
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 sm:p-8 mb-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
+            <div>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-amber-900 mb-1">संस्कृत कीबोर्ड</h1>
+              <p className="text-gray-600 text-sm sm:text-base">Sanskrit Devanagari Keyboard</p>
+            </div>
+            <div className="flex gap-2 flex-wrap">
+              <button onClick={handleCopy} className="bg-amber-900 hover:bg-amber-800 text-white rounded-lg px-4 py-2 transition-all duration-300 hover:scale-105 hover:shadow-lg flex items-center gap-2">
+                {copied ? <Check size={18} /> : <Copy size={18} />}
+                <span className="hidden sm:inline">{copied ? 'Copied!' : 'Copy'}</span>
+              </button>
+              <button onClick={handleDownload} className="bg-orange-600 hover:bg-orange-700 text-white rounded-lg px-4 py-2 transition-all duration-300 hover:scale-105 hover:shadow-lg flex items-center gap-2">
+                <Download size={18} />
+                <span className="hidden sm:inline">Save</span>
+              </button>
+              <button onClick={handleClear} className="bg-gray-600 hover:bg-gray-700 text-white rounded-lg px-4 py-2 transition-all duration-300 hover:scale-105 hover:shadow-lg flex items-center gap-2">
+                <Delete size={18} />
+                <span className="hidden sm:inline">Clear</span>
+              </button>
+            </div>
+          </div>
+          
+          <div className="bg-gray-50 border-2 border-gray-200 rounded-xl p-4 sm:p-6 shadow-inner">
+            <textarea value={text} onChange={(e) => setText(e.target.value)} className="w-full h-24 sm:h-32 bg-transparent text-gray-900 text-xl sm:text-2xl lg:text-3xl font-serif resize-none focus:outline-none placeholder-gray-400" placeholder="यहाँ टाइप करें..." />
+          </div>
+        </div>
+
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-4 sm:p-6 lg:p-8 space-y-6">
+          <div>
+            <h3 className="text-xs sm:text-sm font-semibold text-amber-900 mb-3 uppercase tracking-wide">Vowels • स्वर</h3>
+            <div className="grid grid-cols-7 sm:grid-cols-10 lg:grid-cols-14 gap-2">
+              {vowels.map((v, i) => (
+                <button key={i} onClick={() => addChar(v)} className="aspect-square bg-white hover:bg-amber-900 border-2 border-amber-900 hover:border-amber-900 rounded-lg text-lg sm:text-xl lg:text-2xl font-serif text-amber-900 hover:text-white transition-all duration-300 hover:scale-110 hover:shadow-lg active:scale-95">
+                  {v}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-xs sm:text-sm font-semibold text-amber-900 mb-3 uppercase tracking-wide">Vowel Signs • मात्राएँ</h3>
+            <div className="grid grid-cols-8 sm:grid-cols-12 lg:grid-cols-16 gap-2">
+              {vowelSigns.map((v, i) => (
+                <button key={i} onClick={() => addChar(v)} className="aspect-square bg-white hover:bg-orange-600 border-2 border-orange-600 hover:border-orange-600 rounded-lg text-lg sm:text-xl lg:text-2xl font-serif text-orange-600 hover:text-white transition-all duration-300 hover:scale-110 hover:shadow-lg active:scale-95">
+                  {v}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-xs sm:text-sm font-semibold text-amber-900 mb-3 uppercase tracking-wide">Consonants • व्यञ्जन</h3>
+            <div className="space-y-2">
+              {consonants.map((row, i) => (
+                <div key={i} className="grid grid-cols-5 gap-2">
+                  {row.map((c, j) => (
+                    <button key={j} onClick={() => addChar(c)} className="aspect-square bg-white hover:bg-amber-900 border-2 border-gray-300 hover:border-amber-900 rounded-lg text-lg sm:text-xl lg:text-2xl font-serif text-gray-800 hover:text-white transition-all duration-300 hover:scale-110 hover:shadow-lg active:scale-95">
+                      {c}
+                    </button>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div>
+              <h3 className="text-xs sm:text-sm font-semibold text-amber-900 mb-3 uppercase tracking-wide">Numbers • अङ्क</h3>
+              <div className="grid grid-cols-5 sm:grid-cols-10 gap-2">
+                {numbers.map((n, i) => (
+                  <button key={i} onClick={() => addChar(n)} className="aspect-square bg-white hover:bg-gray-700 border-2 border-gray-400 hover:border-gray-700 rounded-lg text-lg sm:text-xl lg:text-2xl font-serif text-gray-700 hover:text-white transition-all duration-300 hover:scale-110 hover:shadow-lg active:scale-95">
+                    {n}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-xs sm:text-sm font-semibold text-amber-900 mb-3 uppercase tracking-wide">Special Characters</h3>
+              <div className="grid grid-cols-4 gap-2">
+                {special.map((s, i) => (
+                  <button key={i} onClick={() => addChar(s)} className="aspect-square bg-white hover:bg-orange-600 border-2 border-orange-600 hover:border-orange-600 rounded-lg text-lg sm:text-xl lg:text-2xl font-serif text-orange-600 hover:text-white transition-all duration-300 hover:scale-110 hover:shadow-lg active:scale-95">
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-3">
+            <button onClick={handleSpace} className="col-span-2 h-12 sm:h-14 bg-white hover:bg-gray-700 border-2 border-gray-400 hover:border-gray-700 rounded-lg text-gray-700 hover:text-white font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95">
+              Space
+            </button>
+            <button onClick={handleBackspace} className="h-12 sm:h-14 bg-white hover:bg-amber-900 border-2 border-amber-900 hover:border-amber-900 rounded-lg text-amber-900 hover:text-white font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95">
+              ⌫ Back
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-8 bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl shadow-lg border border-gray-200 p-6 sm:p-8 overflow-hidden relative">
+          <div className="absolute inset-0 flex items-end justify-between opacity-10 pointer-events-none">
+            <svg viewBox="0 0 200 200" className="h-48 sm:h-64 text-amber-900 -ml-8">
+              <path fill="currentColor" d="M100,20 L120,50 L140,50 L140,80 L130,80 L130,120 L110,120 L110,80 L90,80 L90,120 L70,120 L70,80 L60,80 L60,50 L80,50 Z M100,50 L85,65 L115,65 Z M75,90 L85,90 L85,110 L75,110 Z M115,90 L125,90 L125,110 L115,110 Z"/>
+              <rect fill="currentColor" x="50" y="120" width="100" height="10"/>
+              <path fill="currentColor" d="M40,130 L160,130 L150,150 L50,150 Z"/>
+            </svg>
+            <svg viewBox="0 0 200 200" className="h-48 sm:h-64 text-orange-700 -mr-8">
+              <path fill="currentColor" d="M100,30 L110,45 L125,45 L125,60 L120,60 L120,90 L115,90 L115,130 L105,130 L105,90 L95,90 L95,130 L85,130 L85,90 L80,90 L80,60 L75,60 L75,45 L90,45 Z"/>
+              <circle fill="currentColor" cx="100" cy="35" r="8"/>
+              <rect fill="currentColor" x="70" y="130" width="60" height="8"/>
+              <path fill="currentColor" d="M60,138 L140,138 L135,155 L65,155 Z"/>
+              <rect fill="currentColor" x="90" y="100" width="5" height="15"/>
+              <rect fill="currentColor" x="105" y="100" width="5" height="15"/>
+            </svg>
+          </div>
+
+          <div className="relative z-10 text-center">
+            <div className="flex items-center justify-center gap-2 mb-3">
+              <svg viewBox="0 0 100 100" className="h-8 w-8 text-orange-600">
+                <path fill="currentColor" d="M50,10 C30,10 15,25 15,45 C15,65 35,85 50,90 C65,85 85,65 85,45 C85,25 70,10 50,10 Z M50,30 C58,30 65,37 65,45 C65,53 58,60 50,60 C42,60 35,53 35,45 C35,37 42,30 50,30 Z"/>
+              </svg>
+              <h3 className="text-xl sm:text-2xl font-bold text-amber-900">संस्कृत भाषा</h3>
+            </div>
+            <p className="text-gray-700 text-sm sm:text-base mb-2">Preserving the ancient language of wisdom and knowledge</p>
+            <p className="text-gray-600 text-xs sm:text-sm">देवभाषा संस्कृतम् • The Language of the Gods</p>
+          </div>
+
+          <div className="mt-6 flex justify-center gap-2">
+            {[...Array(7)].map((_, i) => (
+              <div key={i} className="w-2 h-2 rounded-full bg-gradient-to-r from-amber-600 to-orange-600"></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+## FILE: .gitignore
+
+```
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Production
+/build
+
+# Misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+```
+
+---
+
+## FILE: tailwind.config.js
+
+```javascript
+module.exports = {
+  content: [
+    "./src/**/*.{js,jsx,ts,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+```
+
+---
+
+## FILE: README.md
+
+```markdown
+# Sanskrit Keyboard - संस्कृत कीबोर्ड
+
+A modern, responsive web application for typing in Sanskrit using Devanagari script.
+
+## Features
+
+- Complete Devanagari character set
+- Vowels, consonants, vowel signs, and special characters
+- Devanagari numbers
+- Copy to clipboard
+- Download as text file
+- Responsive design for all devices
+- Beautiful UI with Indian temple illustrations
+
+## Installation
+
+1. Clone this repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+   ```bash
+   npm start
+   ```
+
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+## Building for Production
+
+```bash
+npm run build
+```
+
+This creates an optimized production build in the `build` folder.
+
+## Deployment
+
+You can deploy the `build` folder to any static hosting service:
+- Netlify
+- Vercel
+- GitHub Pages
+- Firebase Hosting
+
+## Technologies Used
+
+- React 18
+- Tailwind CSS
+- Lucide React (icons)
+- Create React App
+
+## License
+
+MIT License
+```
+
+---
+
+## Setup Instructions
+
+1. **Create a new folder** called `sanskrit-keyboard`
+2. **Copy each file** to its respective location as shown in the structure
+3. **Install Tailwind CSS** (important!):
+   ```bash
+   npm install -D tailwindcss postcss autoprefixer
+   npx tailwindcss init
+   ```
+4. **Run the app**:
+   ```bash
+   npm install
+   npm start
+   ```
+
+5. **Build for production**:
+   ```bash
+   npm run build
+   ```
+
+The `build` folder can be deployed to any web hosting service!
